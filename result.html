@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Analisis - GARIS-BIRU</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Hasil Analisis Karbon</h1>
+        <p>Berikut adalah rincian analisis dari citra yang Anda unggah.</p>
+    </header>
+
+    <main>
+        <section id="dashboard-section" class="dashboard-section">
+            <div class="dashboard-header">
+                <h2>Laporan Analisis</h2>
+                <p id="analysis-timestamp"></p>
+            </div>
+            <div class="dashboard-grid-3">
+                <div class="card">
+                    <h3>Citra Original</h3>
+                    <img id="original-image-result" src="https://placehold.co/600x400/e0e7ff/334155?text=Loading..." alt="Citra Original">
+                </div>
+                <div class="card">
+                    <h3>Peta Segmentasi Ekosistem</h3>
+                    <img id="segmented-image-result" src="https://placehold.co/600x400/e0e7ff/334155?text=Loading..." alt="Peta Segmentasi">
+                </div>
+                <div class="card">
+                    <h3>Peta Kepadatan Karbon (Heatmap)</h3>
+                    <img id="heatmap-image-result" src="https://placehold.co/600x400/e0e7ff/334155?text=Loading..." alt="Peta Heatmap Karbon">
+                </div>
+            </div>
+            <div class="dashboard-grid-2">
+                <div class="card">
+                    <h3>Komposisi Ekosistem</h3>
+                    <canvas id="composition-chart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Estimasi Stok Karbon per Ekosistem</h3>
+                    <canvas id="stock-chart"></canvas>
+                </div>
+            </div>
+            <div class="summary-card">
+                <h3>Ringkasan Data & Valuasi</h3>
+                <div class="summary-grid">
+                    <div><h4>Total Area Teranalisis</h4><p id="total-area">0 ha</p></div>
+                    <div><h4>Estimasi Total Stok Karbon</h4><p id="total-stock" class="highlight">0 Ton CO₂e</p></div>
+                    <div><h4>Potensi Nilai Pasar (Rendah - $5/ton)</h4><p id="value-low">Rp 0</p></div>
+                    <div><h4>Potensi Nilai Pasar (Tinggi - $30/ton)</h4><p id="value-high">Rp 0</p></div>
+                </div>
+            </div>
+        </section>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="index.html" class="back-button">Analisis Gambar Lain</a>
+        </div>
+    </main>
+    <script src="js/result.js"></script>
+</body>
+</html>

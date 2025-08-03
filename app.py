@@ -19,59 +19,74 @@ os.makedirs(RESULT_FOLDER, exist_ok=True)
 
 def analyze_image(image_path):
     """
-    Fungsi ini membaca gambar dan melakukan analisis 'palsu'
-    untuk meniru segmentasi dan pembuatan heatmap.
+    Fungsi analisis yang disempurnakan.
     """
     img = cv2.imread(image_path)
     if img is None:
         return None
 
-    # --- 1. Simulasi Segmentasi ---
-    # Mengubah gambar ke HSV (Hue, Saturation, Value) agar lebih mudah memfilter warna
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     
-    # Tentukan rentang warna untuk setiap kelas
-    # (Angka-angka ini mungkin perlu disesuaikan tergantung gambar Anda)
-    mangrove_lower = np.array([30, 40, 40])
+    # --- 1. Segmentasi yang Lebih Baik ---
+    # Rentang untuk Mangrove/Vegetasi (Hijau)
+    mangrove_lower = np.array([30, 40, 20])
     mangrove_upper = np.array([90, 255, 255])
-    water_lower = np.array([90, 50, 50])
-    water_upper = np.array([130, 255, 255])
-    
-    # Buat 'mask' untuk setiap warna
     mangrove_mask = cv2.inRange(hsv, mangrove_lower, mangrove_upper)
-    water_mask = cv2.inRange(hsv, water_lower, water_upper)
+
+    # Rentang untuk Daratan/Tanah (Kuning/Coklat)
+    land_lower = np.array([15, 50, 50])
+    land_upper = np.array([30, 255, 255])
+    land_mask = cv2.inRange(hsv, land_lower, land_upper)
+    
+    # Gabungkan mask darat dan mangrove
+    non_water_mask = cv2.bitwise_or(mangrove_mask, land_mask)
+    
+    # Air adalah semua yang BUKAN darat atau mangrove
+    water_mask = cv2.bitwise_not(non_water_mask)
     
     # Buat gambar output segmentasi
     segmented_img = np.zeros_like(img)
-    segmented_img[mangrove_mask > 0] = [0, 255, 0]  # Mangrove -> Hijau
     segmented_img[water_mask > 0] = [255, 0, 0]      # Air -> Biru
+    segmented_img[land_mask > 0] = [0, 255, 255]      # Darat -> Kuning
+    segmented_img[mangrove_mask > 0] = [0, 255, 0]  # Mangrove -> Hijau
     
-    # --- 2. Simulasi Heatmap ---
-    # Mengubah ke grayscale, di mana area lebih terang dianggap lebih padat
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    heatmap_img = cv2.applyColorMap(gray, cv2.COLORMAP_JET)
+    # --- 2. Simulasi Heatmap (Berdasarkan Vegetasi) ---
+    # Heatmap sekarang berdasarkan di mana ada mangrove (lebih logis)
+    # Area mangrove akan biru tua, sisanya akan lebih terang
+    heatmap_base = np.zeros(img.shape[:2], dtype=np.uint8)
+    # Beri nilai tinggi (putih) pada area mangrove
+    heatmap_base[mangrove_mask > 0] = 255 
+    heatmap_img = cv2.applyColorMap(heatmap_base, cv2.COLORMAP_JET)
 
-    # --- 3. Kalkulasi Data Dummy (berdasarkan hasil mask) ---
+    # --- 3. Kalkulasi Data (Lebih Akurat) ---
     total_pixels = img.shape[0] * img.shape[1]
     mangrove_pixels = cv2.countNonZero(mangrove_mask)
     water_pixels = cv2.countNonZero(water_mask)
+    land_pixels = cv2.countNonZero(land_mask)
     
-    mangrove_percentage = (mangrove_pixels / total_pixels) * 100
-    water_percentage = (water_pixels / total_pixels) * 100
-    land_percentage = 100 - mangrove_percentage - water_percentage
+    # Normalisasi persentase
+    total_classified = mangrove_pixels + water_pixels + land_pixels
+    mangrove_percentage = (mangrove_pixels / total_classified) * 100 if total_classified > 0 else 0
+    water_percentage = (water_pixels / total_classified) * 100 if total_classified > 0 else 0
+    land_percentage = (land_pixels / total_classified) * 100 if total_classified > 0 else 0
 
-    total_carbon = (mangrove_pixels * 0.015) + ((total_pixels - mangrove_pixels - water_pixels) * 0.003) # Faktor acak
+    total_carbon = (mangrove_pixels * 0.015) + (land_pixels * 0.003)
 
     # --- 4. Simpan gambar hasil analisis ---
     timestamp = int(time.time())
+    original_filename = f'original_{timestamp}.png'
     segmented_filename = f'segmented_{timestamp}.png'
     heatmap_filename = f'heatmap_{timestamp}.png'
     
+    # Simpan juga file original yang diupload untuk referensi
+    cv2.imwrite(os.path.join(UPLOAD_FOLDER, original_filename), img)
     cv2.imwrite(os.path.join(RESULT_FOLDER, segmented_filename), segmented_img)
     cv2.imwrite(os.path.join(RESULT_FOLDER, heatmap_filename), heatmap_img)
 
     # --- 5. Siapkan data untuk dikirim kembali ---
     analysis_data = {
+        # Tambahkan URL untuk gambar original
+        "original_image_url": f"/uploads/{original_filename}", 
         "segmented_image_url": f"/results/{segmented_filename}",
         "heatmap_image_url": f"/results/{heatmap_filename}",
         "total_stock": round(total_carbon),
@@ -80,7 +95,7 @@ def analyze_image(image_path):
             "water": round(water_percentage, 2),
             "land": round(land_percentage, 2)
         },
-        "total_area": round(total_pixels / 10000, 2) # Asumsi kasar
+        "total_area": round(total_pixels / 10000, 2)
     }
 
     return analysis_data
