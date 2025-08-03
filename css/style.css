@@ -1,0 +1,184 @@
+/* Import Font dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Variabel Warna untuk Tema */
+:root {
+    --primary-blue: #2563eb;
+    --dark-blue: #1e3a8a;
+    --light-blue: #dbeafe;
+    --background-white: #f8fafc;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --card-border: #e2e8f0;
+}
+
+/* Reset dan Gaya Dasar Body */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-white);
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--dark-blue);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Gaya untuk Bagian Uploader */
+.uploader-section {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 3rem;
+}
+
+.card, .uploader-card, .image-preview-card, .summary-card {
+    background-color: white;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.uploader-card h2, .image-preview-card h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: var(--dark-blue);
+}
+
+.uploader-card p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--card-border);
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+button {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--dark-blue);
+}
+
+#image-preview {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+}
+
+/* Gaya untuk Dasbor */
+.hidden {
+    display: none !important;
+}
+
+.dashboard-section {
+    border-top: 2px solid var(--light-blue);
+    padding-top: 2rem;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+    font-size: 2rem;
+    color: var(--dark-blue);
+}
+
+.dashboard-grid-3, .dashboard-grid-2 {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.dashboard-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card h3 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Gaya untuk Ringkasan Data */
+.summary-card .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    text-align: center;
+}
+
+.summary-grid h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.summary-grid p {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.summary-grid p.highlight {
+    color: var(--primary-blue);
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 900px) {
+    .uploader-section, .dashboard-grid-3, .dashboard-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .summary-card .summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

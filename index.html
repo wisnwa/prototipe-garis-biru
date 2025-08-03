@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototipe GARIS-BIRU - Analisis Karbon</title>
+    <!-- Menghubungkan file CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Memuat library Chart.js untuk membuat diagram -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Prototipe GARIS-BIRU</h1>
+        <p>Unggah citra satelit atau drone untuk analisis potensi karbon biru.</p>
+    </header>
+
+    <main>
+        <!-- Bagian untuk mengunggah file -->
+        <section class="uploader-section">
+            <div class="uploader-card">
+                <h2>1. Pilih Citra Area</h2>
+                <p>Pilih file gambar (JPG/PNG) dari komputer Anda.</p>
+                <input type="file" id="image-input" accept="image/png, image/jpeg">
+                <button type="button" id="analyze-button">Analisis Sekarang</button>
+            </div>
+            <!-- Tempat untuk menampilkan preview gambar yang diunggah -->
+            <div class="image-preview-card">
+                <h2>Preview Gambar</h2>
+                <img id="image-preview" src="https://placehold.co/600x400/e0e7ff/334155?text=Gambar+Anda+Akan+Tampil+di+Sini" alt="Preview Gambar Pilihan">
+            </div>
+        </section>
+
+        <!-- Kontainer untuk Dasbor Hasil Analisis (Awalnya disembunyikan) -->
+        <section id="dashboard-section" class="dashboard-section hidden">
+            
+            <div class="dashboard-header">
+                <h2>2. Hasil Analisis Karbon</h2>
+                <p id="analysis-timestamp"></p>
+            </div>
+
+            <!-- Baris 1: Visualisasi Peta -->
+            <div class="dashboard-grid-3">
+                <div class="card">
+                    <h3>Citra Original</h3>
+                    <img id="original-image-result" src="" alt="Citra Original">
+                </div>
+                <div class="card">
+                    <h3>Peta Segmentasi Ekosistem</h3>
+                    <img id="segmented-image-result" src="" alt="Peta Segmentasi">
+                </div>
+                <div class="card">
+                    <h3>Peta Kepadatan Karbon (Heatmap)</h3>
+                    <img id="heatmap-image-result" src="" alt="Peta Heatmap Karbon">
+                </div>
+            </div>
+
+            <!-- Baris 2: Visualisasi Diagram -->
+            <div class="dashboard-grid-2">
+                <div class="card">
+                    <h3>Komposisi Ekosistem</h3>
+                    <canvas id="composition-chart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Estimasi Stok Karbon per Ekosistem</h3>
+                    <canvas id="stock-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Baris 3: Data Teks & Ringkasan -->
+            <div class="summary-card">
+                <h3>Ringkasan Data & Valuasi</h3>
+                <div class="summary-grid">
+                    <div>
+                        <h4>Total Area Teranalisis</h4>
+                        <p id="total-area">0 ha</p>
+                    </div>
+                    <div>
+                        <h4>Estimasi Total Stok Karbon</h4>
+                        <p id="total-stock" class="highlight">0 Ton CO₂e</p>
+                    </div>
+                    <div>
+                        <h4>Potensi Nilai Pasar (Rendah - $5/ton)</h4>
+                        <p id="value-low">Rp 0</p>
+                    </div>
+                    <div>
+                        <h4>Potensi Nilai Pasar (Tinggi - $30/ton)</h4>
+                        <p id="value-high">Rp 0</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Menghubungkan file JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
