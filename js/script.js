@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     const imageInput = document.getElementById('image-input');
     const analyzeButton = document.getElementById('analyze-button');
     const imagePreview = document.getElementById('image-preview');
@@ -16,42 +17,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     analyzeButton.addEventListener('click', async (event) => {
         event.preventDefault();
-
         if (!uploadedFile) {
             alert('Silakan pilih gambar terlebih dahulu!');
             return;
         }
 
-        analyzeButton.textContent = 'Mengirim & Menganalisis...';
+        analyzeButton.textContent = 'Mengirim Gambar...';
         analyzeButton.disabled = true;
 
         const formData = new FormData();
         formData.append('file', uploadedFile);
 
         try {
-            const response = await fetch(`${BACKEND_URL}/analyze`, {
+            // 1. Kirim gambar ke endpoint BARU untuk memulai analisis
+            const startResponse = await fetch(`${BACKEND_URL}/start-analysis`, {
                 method: 'POST',
                 body: formData,
             });
 
-            if (!response.ok) {
-                throw new Error(`Server Error: ${response.statusText}`);
-            }
+            if (!startResponse.ok) throw new Error('Failed to start analysis');
             
-            const data = await response.json();
-
-            // Simpan SELURUH hasil dari server ke sessionStorage.
-            // Tidak perlu lagi menyimpan URL gambar original secara terpisah.
-            sessionStorage.setItem('analysisResult', JSON.stringify(data));
-
-            // Arahkan pengguna ke halaman hasil
-            window.location.href = 'result.html';
+            const { task_id } = await startResponse.json();
+            
+            // Tampilkan status baru ke pengguna
+            analyzeButton.textContent = 'AI sedang menganalisis... (Mohon tunggu)';
+            
+            // 2. Mulai mengecek status setiap 3 detik
+            checkAnalysisStatus(task_id);
 
         } catch (error) {
             console.error('Error:', error);
-            alert(`Terjadi kesalahan saat menghubungi server analisis: ${error.message}`);
+            alert(`Terjadi kesalahan saat memulai analisis: ${error.message}`);
             analyzeButton.textContent = 'Analisis Sekarang';
             analyzeButton.disabled = false;
         }
     });
+    
+    function checkAnalysisStatus(taskId) {
+        const interval = setInterval(async () => {
+            try {
+                const statusResponse = await fetch(`${BACKEND_URL}/check-status/${taskId}`);
+                if (!statusResponse.ok) {
+                    clearInterval(interval);
+                    throw new Error('Failed to check status');
+                }
+                
+                const task = await statusResponse.json();
+
+                if (task.status === 'completed') {
+                    clearInterval(interval); // Hentikan pengecekan
+                    analyzeButton.textContent = 'Analisis Selesai!';
+                    
+                    // Simpan hasil ke sessionStorage dan pindah halaman
+                    sessionStorage.setItem('analysisResult', JSON.stringify(task.result));
+                    window.location.href = 'result.html';
+
+                } else if (task.status === 'failed') {
+                    clearInterval(interval);
+                    throw new Error(`Analisis Gagal: ${task.error}`);
+                }
+                // Jika status masih 'pending', tidak melakukan apa-apa dan lanjut mengecek
+                
+            } catch (error) {
+                clearInterval(interval);
+                console.error('Error:', error);
+                alert(error.message);
+                analyzeButton.textContent = 'Analisis Sekarang';
+                analyzeButton.disabled = false;
+            }
+        }, 3000); // Cek status setiap 3 detik
+    }
 });
