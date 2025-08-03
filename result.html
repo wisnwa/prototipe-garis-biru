@@ -22,25 +22,35 @@
             <div class="dashboard-grid-3">
                 <div class="card">
                     <h3>Citra Original</h3>
-                    <img id="original-image-result" src="https://placehold.co/600x400/e0e7ff/334155?text=Loading..." alt="Citra Original">
+                    <img id="original-image-result" src="" alt="Citra Original">
                 </div>
                 <div class="card">
                     <h3>Peta Segmentasi Ekosistem</h3>
-                    <img id="segmented-image-result" src="https://placehold.co/600x400/e0e7ff/334155?text=Loading..." alt="Peta Segmentasi">
+                    <img id="segmented-image-result" src="" alt="Peta Segmentasi">
+                    <!-- Area Legenda untuk Segmentasi -->
+                    <div class="legend" id="segmentation-legend"></div>
                 </div>
                 <div class="card">
                     <h3>Peta Kepadatan Karbon (Heatmap)</h3>
-                    <img id="heatmap-image-result" src="https://placehold.co/600x400/e0e7ff/334155?text=Loading..." alt="Peta Heatmap Karbon">
+                    <img id="heatmap-image-result" src="" alt="Peta Heatmap Karbon">
+                    <!-- Area Legenda untuk Heatmap -->
+                    <div class="legend" id="heatmap-legend"></div>
                 </div>
             </div>
             <div class="dashboard-grid-2">
                 <div class="card">
                     <h3>Komposisi Ekosistem</h3>
-                    <canvas id="composition-chart"></canvas>
+                    <!-- Wadah untuk membatasi tinggi diagram -->
+                    <div class="chart-container">
+                        <canvas id="composition-chart"></canvas>
+                    </div>
                 </div>
                 <div class="card">
                     <h3>Estimasi Stok Karbon per Ekosistem</h3>
-                    <canvas id="stock-chart"></canvas>
+                    <!-- Wadah untuk membatasi tinggi diagram -->
+                    <div class="chart-container">
+                        <canvas id="stock-chart"></canvas>
+                    </div>
                 </div>
             </div>
             <div class="summary-card">

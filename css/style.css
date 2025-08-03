@@ -170,17 +170,43 @@ button:hover {
     color: var(--primary-blue);
 }
 
-/* Responsif untuk layar kecil */
-@media (max-width: 900px) {
-    .uploader-section, .dashboard-grid-3, .dashboard-grid-2 {
-        grid-template-columns: 1fr;
-    }
+/* Gaya untuk wadah diagram */
+.chart-container {
+    position: relative;
+    height: 350px; /* Atur tinggi maksimal di sini */
+    width: 100%;
 }
 
-@media (max-width: 600px) {
-    .summary-card .summary-grid {
-        grid-template-columns: 1fr 1fr;
-    }
+/* Gaya untuk Legenda di Bawah Gambar */
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--card-border);
+    font-size: 0.875rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-color-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+.heatmap-legend-gradient {
+    width: 120px;
+    height: 18px;
+    border-radius: 4px;
+    /* Gradasi dari merah (rendah) ke biru tua (tinggi) */
+    background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff);
 }
 
 .back-button {
@@ -196,4 +222,17 @@ button:hover {
 
 .back-button:hover {
     background-color: var(--dark-blue);
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 900px) {
+    .uploader-section, .dashboard-grid-3, .dashboard-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .summary-card .summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const imageInput = document.getElementById('image-input');
     const analyzeButton = document.getElementById('analyze-button');
     const imagePreview = document.getElementById('image-preview');
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     analyzeButton.addEventListener('click', async (event) => {
-        // Mencegah aksi default apapun dari tombol
         event.preventDefault();
 
         if (!uploadedFile) {
@@ -42,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const data = await response.json();
 
-            // Simpan hasil dari server ke sessionStorage
+            // Simpan SELURUH hasil dari server ke sessionStorage.
+            // Tidak perlu lagi menyimpan URL gambar original secara terpisah.
             sessionStorage.setItem('analysisResult', JSON.stringify(data));
 
             // Arahkan pengguna ke halaman hasil
